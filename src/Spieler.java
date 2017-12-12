@@ -1,8 +1,10 @@
 
 public class Spieler {
 	private String name;
-	private static int anzahl;
+	private static int anzahl = 0;
 	private int punkte;
+	Karte handKarten []= new Karte[5];
+
 	public Spieler(String name) {
 		setName(name);
 		incAnzahl();
@@ -23,10 +25,15 @@ public class Spieler {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public int vorhersagen() {
 		return 0;
 	}
-	public void karteLegen(Karte k) {		
+
+	public void karteLegen(Karte k) {
 	}
 
+	public String toString() {
+		return name;
+	}
 }
