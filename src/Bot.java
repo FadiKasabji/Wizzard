@@ -1,6 +1,6 @@
 
 public class Bot extends Spieler {
-//asdasdas
+//bla 
 	public Bot(String name) {
 		super(name);
 	}
