@@ -1,0 +1,32 @@
+
+public class Spieler {
+	private String name;
+	private static int anzahl;
+	private int punkte;
+	public Spieler(String name) {
+		setName(name);
+		incAnzahl();
+	}
+
+	public static int getAnzahl() {
+		return anzahl;
+	}
+
+	public static void incAnzahl() {
+		anzahl++;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int vorhersagen() {
+		return 0;
+	}
+	public void karteLegen(Karte k) {		
+	}
+
+}
