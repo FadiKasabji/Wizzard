@@ -27,10 +27,12 @@ public class Spieler {
 	}
 
 	public int vorhersagen() {
+		
 		return 0;
 	}
 
-	public void karteLegen(Karte k) {
+	public Karte karteLegen(Karte k) {
+		return null;
 	}
 
 	public String toString() {
