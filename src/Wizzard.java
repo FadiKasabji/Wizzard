@@ -6,6 +6,7 @@ public class Wizzard {
 	Spieler[] spieler = new Spieler[4];
 	Karte trumpfkarte;
 	WB wb;
+	static int aktiverSpieler = 0;
 	public static int runde = 1;
 
 	public void deckAusfuellen() {
@@ -14,7 +15,6 @@ public class Wizzard {
 			for (int i = 0; i < 4; i++) {
 				for (int j = 1; j < 14; j++) {
 					karten[x] = new Karte(Farbe.values()[i], j);
-					System.out.println(karten[x]);
 					x++;
 
 				}
@@ -67,8 +67,94 @@ public class Wizzard {
 	public void start() {
 		while (runde < 6) {
 			kartenAusteilen();
-
+			trumpfkarte = karten[(int) (Math.random() * 51)];
+			System.out.println("trumpfkarte: " + trumpfkarte);
+			alleVorhersagen();
+			alleKartenlegen();
 			runde++;
+			if (aktiverSpieler < Spieler.getAnzahl()) {
+				aktiverSpieler++;
+			} else {
+				aktiverSpieler = 0;
+			}
+		}
+	}
+
+	private void alleVorhersagen() {
+		int tempaktiv = aktiverSpieler;
+		for (int i = 0; i < Spieler.getAnzahl(); i++) {
+			if (spieler[tempaktiv] != null) {
+				spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
+				if (tempaktiv < Spieler.getAnzahl())
+					tempaktiv++;
+				else
+					tempaktiv = 0;
+			}
+		}
+	}
+
+	private void alleKartenlegen() {
+		int tempaktiv = aktiverSpieler;
+		int kleineRunde = 1;
+		while (kleineRunde <= runde) {
+			// karten legen
+			tempaktiv = aktiverSpieler;
+			for (int i = 0; i < Spieler.getAnzahl(); i++) {
+
+				if (spieler[tempaktiv] != null) {
+					kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen();
+				}
+				if (tempaktiv < Spieler.getAnzahl()) {
+					tempaktiv++;
+				} else {
+					tempaktiv = 0;
+				}
+				System.out.println(kartenfeld[i]);
+			}
+			stechen();
+			berechnen();
+			feldAufraeumen();
+			kleineRunde++;
+		}
+	}
+
+	private void berechnen() {
+		for (int i = 0; i < Spieler.getAnzahl(); i++) {
+			if (spieler[i].getStich() == spieler[i].getVorhersage()) {
+				spieler[i].setPunkte(spieler[i].getPunkte() + 20 + (spieler[i].getStich() * 10));
+			} else {
+				spieler[i].setPunkte(
+						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
+			}
+		}
+
+	}
+
+	private void stechen() {
+		int index = 0;
+		int max = 0;
+		for (int i = 0; i < Spieler.getAnzahl(); i++) {
+			if (kartenfeld[i].getFarbe() == trumpfkarte.getFarbe()) {
+				if (kartenfeld[i].getZahl() > max) {
+					max = kartenfeld[i].getZahl();
+					index = i;
+
+				}
+			} else {
+				if (kartenfeld[i].getFarbe() == kartenfeld[aktiverSpieler].getFarbe()) {
+					if (kartenfeld[i].getZahl() > max) {
+						max = kartenfeld[i].getZahl();
+						index = i;
+					}
+				}
+			}
+			spieler[index].setStich(spieler[index].getStich() + 1);
+		}
+	}
+
+	private void feldAufraeumen() {
+		for (int j = 0; j < kartenfeld.length; j++) {
+			kartenfeld[j] = null;
 		}
 	}
 
