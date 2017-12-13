@@ -1,6 +1,6 @@
 
 public class Bot extends Spieler {
-//bla 
+
 	public Bot(String name) {
 		super(name);
 	}
@@ -9,16 +9,31 @@ public class Bot extends Spieler {
 	public int vorhersagen() {
 		int zuf = (int) (Math.random() * Wizzard.runde);
 		int vorhersage = zuf;
+		System.out.println(this.getName()+"meine vorhersage:" + vorhersage);
 		return vorhersage;
 	}
 
-	@Override 
-	public Karte karteLegen(Karte k) {
-		for(int i=0; i<Wizzard.runde;i++) {
-			if(handKarten[i].getFarbe()==Wizzard.kartenfeld[0].getFarbe()&&Wizzard.kartenfeld[0]!=null){
-				return handKarten[i];
-				
+	@Override
+	public Karte karteLegen() {
+		Karte tempKarte = null;
+		for (int i = 0; i < Wizzard.runde; i++) {
+			if (handKarten[i].getFarbe() == Wizzard.kartenfeld[Wizzard.aktiverSpieler].getFarbe()
+					&& Wizzard.kartenfeld[Wizzard.aktiverSpieler] != null) {
+				tempKarte = handKarten[i];
+				handKarten[i] = null;
+				System.out.println(this.getName()+" "+tempKarte);
+				return tempKarte;
+
 			}
-		}return handKarten[0];
+		}
+		for (int i = 0; i < Wizzard.runde; i++) {
+			if (handKarten[i] != null) {
+				tempKarte = handKarten[i];
+				handKarten[i] = null;
+				return tempKarte;
+			}
+		}
+		System.out.println("meine karte: " + tempKarte);
+		return tempKarte;
 	}
 }
