@@ -9,7 +9,7 @@ public class Mensch extends Spieler {
 
 	@Override
 	public int vorhersagen() {
-		System.out.println("Bitte vorhersagen");
+		System.out.println(this.getName() + " bitte vorhersagen");
 		int vorhersage = sc.nextInt();
 		return vorhersage;
 	}
@@ -20,7 +20,7 @@ public class Mensch extends Spieler {
 		int kartenNr = sc.nextInt();
 		Karte tempKarte = handKarten[kartenNr];
 		handKarten[kartenNr] = null;
-		System.out.println(this.getName()+" "+handKarten[kartenNr]);
+		System.out.println(this.getName()+" legt "+tempKarte);
 		return tempKarte;
 	}
 }

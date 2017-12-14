@@ -9,7 +9,7 @@ public class Bot extends Spieler {
 	public int vorhersagen() {
 		int zuf =(int) (Math.round(Math.random() * Wizzard.runde));
 		int vorhersage = zuf;
-		System.out.println(this.getName()+"meine vorhersage:" + vorhersage);
+		System.out.println(this.getName()+" hat die Vorhersage:" + vorhersage);
 		return vorhersage;
 	}
 
