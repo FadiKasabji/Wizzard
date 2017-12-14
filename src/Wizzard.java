@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Wizzard {
 	public static Karte[] karten = new Karte[52];
 	static Karte[] kartenfeld = new Karte[4];
-	Spieler[] spieler = new Spieler[4];
+	static Spieler[] spieler = new Spieler[4];
 	Karte trumpfkarte;
 	WB wb;
 	static int aktiverSpieler = 0;
@@ -16,11 +16,9 @@ public class Wizzard {
 				for (int j = 1; j < 14; j++) {
 					karten[x] = new Karte(Farbe.values()[i], j);
 					x++;
-
 				}
 			}
 		}
-
 	}
 
 	public void spielerErstellen() {
@@ -47,9 +45,8 @@ public class Wizzard {
 	}
 
 	public void kartenAusteilen() {
-		int trumpf = (int) (Math.random() * 51);
-		trumpfkarte = karten[trumpf];
-		karten[trumpf] = null;
+		trumpfkarte = karten[(int) (Math.random() * 51)];
+		System.out.println(trumpfkarte);
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
 			for (int j = 0; j < runde; j++) {
 				int zufall = (int) (Math.random() * 51);
@@ -63,16 +60,15 @@ public class Wizzard {
 			}
 		}
 	}
+	
 
 	public void start() {
 		while (runde < 6) {
 			kartenAusteilen();
-			trumpfkarte = karten[(int) (Math.random() * 51)];
-			System.out.println("trumpfkarte: " + trumpfkarte);
 			alleVorhersagen();
 			alleKartenlegen();
 			runde++;
-			if (aktiverSpieler < Spieler.getAnzahl()) {
+			if (aktiverSpieler < Spieler.getAnzahl() - 1) {
 				aktiverSpieler++;
 			} else {
 				aktiverSpieler = 0;
@@ -83,13 +79,11 @@ public class Wizzard {
 	private void alleVorhersagen() {
 		int tempaktiv = aktiverSpieler;
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			if (spieler[tempaktiv] != null) {
-				spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
-				if (tempaktiv < Spieler.getAnzahl())
-					tempaktiv++;
-				else
-					tempaktiv = 0;
-			}
+			spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
+			if (tempaktiv < Spieler.getAnzahl() - 1)
+				tempaktiv++;
+			else
+				tempaktiv = 0;
 		}
 	}
 
@@ -100,16 +94,15 @@ public class Wizzard {
 			// karten legen
 			tempaktiv = aktiverSpieler;
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
+				kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen();
+				System.out.println("Kartenfeld: " + kartenfeld[tempaktiv]);
 
-				if (spieler[tempaktiv] != null) {
-					kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen();
-				}
-				if (tempaktiv < Spieler.getAnzahl()) {
+				if (tempaktiv < Spieler.getAnzahl() - 1) {
 					tempaktiv++;
 				} else {
 					tempaktiv = 0;
 				}
-				System.out.println(kartenfeld[i]);
+
 			}
 			stechen();
 			berechnen();
@@ -150,6 +143,7 @@ public class Wizzard {
 			}
 			spieler[index].setStich(spieler[index].getStich() + 1);
 		}
+		System.out.println(spieler[index].getName() + " hat gestochen!");
 	}
 
 	private void feldAufraeumen() {
