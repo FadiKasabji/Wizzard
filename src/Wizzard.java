@@ -5,10 +5,55 @@ public class Wizzard {
 	static Karte[] kartenfeld = new Karte[4];
 	static Spieler[] spieler = new Spieler[4];
 	Karte trumpfkarte;
-	WB wb;
+	String[][] wb = new String [6][5];
 	static int aktiverSpieler = 0;
 	public static int runde = 1;
 
+	public Wizzard() {
+		spielerErstellen();
+		wahrheitsblockErstellen();
+	}
+	
+	public void spielerErstellen() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Spielername eingeben");
+		String name = sc.nextLine();
+		while (name.length() < 3) {
+			System.out.println("Bitte einen gueltigen Namen eingeben");
+			name = sc.nextLine();
+		}
+		Mensch m = new Mensch(name);
+		spieler[0] = m;
+		System.out.println("Gegneranzahl eingeben");
+		int an = sc.nextInt();
+		while (an > 3 || an < 1) {
+			System.out.println("Bitte gueltige Gegneranzahl eingeben");
+			an = sc.nextInt();
+		}
+		for (int i = 1; i <= an; i++) {
+			spieler[i] = new Bot("Bot" + i);
+
+		}
+	}
+	public void start() {
+		while (runde < 6) {
+			System.out.println("*-----------------"+ runde+". Runde -----------------*");
+			deckAusfuellen();
+			kartenAusteilen();
+			alleVorhersagen();
+			alleKartenlegen();
+			berechnen();
+			wahrheitsblockZeigen();
+			resetStiche();
+			runde++;
+			if (aktiverSpieler < Spieler.getAnzahl() - 1) {
+				aktiverSpieler++;
+			} else {
+				aktiverSpieler = 0;
+			}
+		}
+	}
+	
 	public void deckAusfuellen() {
 		int x = 0;
 		while (x < 52) {
@@ -20,71 +65,28 @@ public class Wizzard {
 			}
 		}
 	}
-
-	public void spielerErstellen() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Spielername eingeben");
-		String name = sc.nextLine();
-		while (name.length() < 3) {
-			System.out.println("Bitte einen gueltigen Namen eingeben");
-			name = sc.nextLine();
-		}
-		Mensch m = new Mensch(name);
-		spieler[0] = m;
-		System.out.println(spieler[0]);
-		System.out.println("Gegneranzahl eingeben");
-		int an = sc.nextInt();
-		while (an > 3 || an < 1) {
-			System.out.println("Bitte gueltige Gegneranzahl eingeben");
-			an = sc.nextInt();
-		}
-		for (int i = 1; i <= an; i++) {
-			spieler[i] = new Bot("Bot" + i);
-			System.out.println(spieler[i]);
-		}
-	}
-
+	
 	public void kartenAusteilen() {
 		trumpfkarte = karten[(int) (Math.random() * 51)];
-		System.out.println(trumpfkarte);
+		System.out.println("Trumpfkarte ist: "+ trumpfkarte);
+		System.out.println();
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
+			System.out.print(spieler[i].getName() + " hat die Karte: ");
 			for (int j = 0; j < runde; j++) {
 				int zufall = (int) (Math.random() * 51);
 				if (karten[zufall] != null) {
 					spieler[i].handKarten[j] = karten[zufall];
-					System.out.println(spieler[i] + " " + spieler[i].handKarten[j]);
+					System.out.print(spieler[i].handKarten[j]+ "     ");
 					karten[zufall] = null;
 				} else {
 					j--;
 				}
 			}
+			System.out.println();
 		}
+		System.out.println();
 	}
-
-	public void start() {
-		while (runde < 6) {
-			deckAusfuellen();
-			kartenAusteilen();
-			alleVorhersagen();
-			alleKartenlegen();
-			berechnen();
-			resetStiche();
-			runde++;
-			if (aktiverSpieler < Spieler.getAnzahl() - 1) {
-				aktiverSpieler++;
-			} else {
-				aktiverSpieler = 0;
-			}
-		}
-	}
-
-	private void resetStiche() {
-		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			spieler[i].setStich(0);
-		}
-
-	}
-
+	
 	private void alleVorhersagen() {
 		int tempaktiv = aktiverSpieler;
 		int sum = 0;
@@ -103,6 +105,7 @@ public class Wizzard {
 			else
 				tempaktiv = 0;
 		}
+		System.out.println();
 	}
 
 	private void alleKartenlegen() {
@@ -113,7 +116,7 @@ public class Wizzard {
 			tempaktiv = aktiverSpieler;
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
 				kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen();
-				System.out.println("Kartenfeld: " + kartenfeld[tempaktiv]);
+
 
 				if (tempaktiv < Spieler.getAnzahl() - 1) {
 					tempaktiv++;
@@ -122,10 +125,16 @@ public class Wizzard {
 				}
 
 			}
+			System.out.print("Kartenfeld: ");
+			for (int i = 0; i < Spieler.getAnzahl(); i++) {
+				System.out.print(  kartenfeld[i] + "\t");
+			}
+			System.out.println();
 			stechen();
 			feldAufraeumen();
 			kleineRunde++;
 		}
+		System.out.println();
 	}
 
 	private void berechnen() {
@@ -134,10 +143,39 @@ public class Wizzard {
 				spieler[i].setPunkte(spieler[i].getPunkte() + 20 + (spieler[i].getStich() * 10));
 			} else {
 				spieler[i].setPunkte(
-						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
+						spieler[i].getPunkte()+ (spieler[i].getStich() * 10) + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
-			System.out.println(spieler[i].getName() + " hat punkte: " + spieler[i].getPunkte());
+			wb[runde][i+1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() +"\t";
+
 		}
+	}
+	public void wahrheitsblockZeigen() {
+		for (String i[] : wb ) {
+			for (String j : i) {
+				System.out.printf(j + "\t");
+			}
+			System.out.println();
+		}
+	}
+	public void wahrheitsblockErstellen	() {
+		for(int i = 0 ; i< 6; i++) {
+			for ( int j = 0; j < 5; j ++) {
+				wb[i][j] = "\t";
+			}
+		}
+		for ( int i = 1; i <= Spieler.getAnzahl() ; i++) {
+			wb[0][i] = spieler [i-1].getName() + "\t";
+		}
+		for(int i = 1 ; i <=5 ; i++) {
+			wb[i][0] = i + ". Runde";
+		}
+	}
+
+	private void resetStiche() {
+		for (int i = 0; i < Spieler.getAnzahl(); i++) {
+			spieler[i].setStich(0);
+		}
+
 	}
 
 	private void stechen() {
@@ -169,13 +207,8 @@ public class Wizzard {
 		}
 	}
 
-	public Wizzard() {
-		spielerErstellen();
-	}
-
 	public static void main(String[] args) {
 		Wizzard w = new Wizzard();
 		w.start();
-
 	}
 }
