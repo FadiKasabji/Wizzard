@@ -7,7 +7,7 @@ public class Bot extends Spieler {
 
 	@Override
 	public int vorhersagen() {
-		int zuf = (int) (Math.random() * Wizzard.runde);
+		int zuf =(int) (Math.round(Math.random() * Wizzard.runde));
 		int vorhersage = zuf;
 		System.out.println(this.getName()+"meine vorhersage:" + vorhersage);
 		return vorhersage;

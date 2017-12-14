@@ -60,13 +60,15 @@ public class Wizzard {
 			}
 		}
 	}
-	
 
 	public void start() {
 		while (runde < 6) {
+			deckAusfuellen();
 			kartenAusteilen();
 			alleVorhersagen();
 			alleKartenlegen();
+			berechnen();
+			resetStiche();
 			runde++;
 			if (aktiverSpieler < Spieler.getAnzahl() - 1) {
 				aktiverSpieler++;
@@ -76,10 +78,26 @@ public class Wizzard {
 		}
 	}
 
+	private void resetStiche() {
+		for (int i = 0; i < Spieler.getAnzahl(); i++) {
+			spieler[i].setStich(0);
+		}
+
+	}
+
 	private void alleVorhersagen() {
 		int tempaktiv = aktiverSpieler;
+		int sum = 0;
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
+			if (i == Spieler.getAnzahl() - 1) {
+				spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
+				while (spieler[tempaktiv].getVorhersage() + sum == runde) {
+					spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
+				}
+			} else {
+				spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
+				sum += spieler[tempaktiv].getVorhersage();
+			}
 			if (tempaktiv < Spieler.getAnzahl() - 1)
 				tempaktiv++;
 			else
@@ -105,7 +123,6 @@ public class Wizzard {
 
 			}
 			stechen();
-			berechnen();
 			feldAufraeumen();
 			kleineRunde++;
 		}
@@ -119,8 +136,8 @@ public class Wizzard {
 				spieler[i].setPunkte(
 						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
+			System.out.println(spieler[i].getName() + " hat punkte: " + spieler[i].getPunkte());
 		}
-
 	}
 
 	private void stechen() {
@@ -131,7 +148,6 @@ public class Wizzard {
 				if (kartenfeld[i].getZahl() > max) {
 					max = kartenfeld[i].getZahl();
 					index = i;
-
 				}
 			} else {
 				if (kartenfeld[i].getFarbe() == kartenfeld[aktiverSpieler].getFarbe()) {
@@ -141,8 +157,9 @@ public class Wizzard {
 					}
 				}
 			}
-			spieler[index].setStich(spieler[index].getStich() + 1);
+
 		}
+		spieler[index].setStich(spieler[index].getStich() + 1);
 		System.out.println(spieler[index].getName() + " hat gestochen!");
 	}
 
@@ -153,12 +170,12 @@ public class Wizzard {
 	}
 
 	public Wizzard() {
-		deckAusfuellen();
 		spielerErstellen();
 	}
 
 	public static void main(String[] args) {
 		Wizzard w = new Wizzard();
 		w.start();
+
 	}
 }
