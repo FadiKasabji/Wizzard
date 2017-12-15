@@ -194,24 +194,30 @@ public class Wizzard {
 	private void stechen() {
 		int index = 0;
 		int max = 0;
+		boolean b = false;
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
 			if (kartenfeld[i].getFarbe() == trumpfkarte.getFarbe()) {
 				if (kartenfeld[i].getZahl() > max) {
 					max = kartenfeld[i].getZahl();
 					index = i;
+					b = true;
 				}
-			} else {
+			}
+		}
+		if (b == false) {
+			for (int i = 0; i < Spieler.getAnzahl(); i++) {
 				if (kartenfeld[i].getFarbe() == kartenfeld[aktiverSpieler].getFarbe()) {
 					if (kartenfeld[i].getZahl() > max) {
 						max = kartenfeld[i].getZahl();
 						index = i;
 					}
 				}
-			}
 
+			}
 		}
 		spieler[index].setStich(spieler[index].getStich() + 1);
 		System.out.println(spieler[index].getName() + " hat gestochen!");
+
 	}
 
 	private void feldAufraeumen() {
