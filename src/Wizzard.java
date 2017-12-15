@@ -52,8 +52,21 @@ public class Wizzard {
 				aktiverSpieler = 0;
 			}
 		}
+		gewinner();
 	}
 	
+	private void gewinner() {
+		int max=0;
+		int index=0;
+		for(int i=0; i<Spieler.getAnzahl();i++) {
+			if(spieler[i].getPunkte()>max) {
+				max=spieler[i].getPunkte();
+				index=i;
+			}
+		}
+		System.out.println(spieler[index].getName()+" hat gewonnen");
+	}
+
 	public void deckAusfuellen() {
 		int x = 0;
 		while (x < 52) {
@@ -143,7 +156,7 @@ public class Wizzard {
 				spieler[i].setPunkte(spieler[i].getPunkte() + 20 + (spieler[i].getStich() * 10));
 			} else {
 				spieler[i].setPunkte(
-						spieler[i].getPunkte()+ (spieler[i].getStich() * 10) + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
+						spieler[i].getPunkte()+Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
 			wb[runde][i+1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() +"\t";
 

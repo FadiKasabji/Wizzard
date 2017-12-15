@@ -18,9 +18,13 @@ public class Mensch extends Spieler {
 	public Karte karteLegen() {
 		System.out.println("Bitte legen Sie eine Karte");
 		int kartenNr = sc.nextInt();
+		while (handKarten[kartenNr] == null) {
+			System.out.println("Bitte gueltige Karte legen");
+			kartenNr = sc.nextInt();
+		}
 		Karte tempKarte = handKarten[kartenNr];
 		handKarten[kartenNr] = null;
-		System.out.println(this.getName()+" legt "+tempKarte);
+		System.out.println(this.getName() + " legt " + tempKarte);
 		return tempKarte;
 	}
 }
