@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+//hiahaihaiha
 public class Wizzard {
 	public static Karte[] karten = new Karte[52];
 	static Karte[] kartenfeld = new Karte[4];
