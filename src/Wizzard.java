@@ -53,10 +53,10 @@ public class Wizzard {
 				aktiverSpieler = 0;
 			}
 		}
-		gewinner();
+		System.out.println(gewinner());
 	}
 
-	private void gewinner() {
+	private String gewinner() {
 		int max = 0;
 		int index = 0;
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
@@ -65,7 +65,7 @@ public class Wizzard {
 				index = i;
 			}
 		}
-		System.out.println(spieler[index].getName() + " hat gewonnen");
+		return spieler[index].getName() + " hat gewonnen";
 	}
 
 	private void deckAusfuellen() {

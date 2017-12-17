@@ -1,5 +1,5 @@
 
-public class Spieler {
+public abstract class Spieler {
 	private String name;
 	private static int anzahl = 0;
 	private int punkte = 0;
