@@ -158,7 +158,7 @@ public class Wizzard {
 				spieler[i].setPunkte(
 						spieler[i].getPunkte()+Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
-			wb[runde][i+1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() +"\t";
+			wb[runde][i+1] =  "\t" + spieler[i].getPunkte() + "|" + spieler[i].getStich();
 
 		}
 	}
