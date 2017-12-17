@@ -6,7 +6,7 @@ public abstract class Spieler {
 	private int vorhersage = 0;
 	private int stich = 0;
 	private Karte[] handKarten = new Karte[5];
-	
+	boolean mensch ;
 	public int getVorhersage() {
 		return vorhersage;
 	}

@@ -5,6 +5,7 @@ public class Mensch extends Spieler {
 
 	public Mensch(String name) {
 		super(name);
+		mensch=true;
 	}
 
 	@Override
@@ -15,15 +16,25 @@ public class Mensch extends Spieler {
 	}
 
 	@Override
-	public Karte karteLegen() {
+	public Karte karteLegen() {// Karte legen
 		System.out.println("Bitte legen Sie eine Karte");
 		int kartenNr = sc.nextInt();
-		while (getHandKarten()[kartenNr] == null) { //eine neue Karte waehlen, wenn die gewaehlte Karte nicht verfuegbar ist
-			System.out.println("Bitte gueltige Karte legen");
-			kartenNr = sc.nextInt();
+		boolean b = false;
+		while (b != true) {
+			while (kartenNr > 4 || kartenNr < 0) { // wenn die ausgewaehlte KartenNr >5 oder <0, noch mal waehlen
+				System.out.println("Bitte gueltige Karte legen");
+				kartenNr = sc.nextInt();
+			}
+			if (getHandKarten()[kartenNr] == null) { // wenn es keine Karte mit der ausgewaehlten KartenNr gibt, nochmal waehlen
+				System.out.println("Bitte gueltige Karte legen");
+				kartenNr = sc.nextInt();
+			} else {
+				b = true;
+			}
+
 		}
 		Karte tempKarte = getHandKarten()[kartenNr];
-		getHandKarten()[kartenNr] = null; //die gespielte Karte nicht mehr in der Hand
+		getHandKarten()[kartenNr] = null; // die gespielte Karte nicht mehr in der Hand
 		System.out.println(this.getName() + " legt " + tempKarte);
 		return tempKarte;
 	}
