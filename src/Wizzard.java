@@ -1,15 +1,16 @@
 import java.util.Scanner;
 
-public class Wizard {
+public class Wizzard {
 	static Karte[] karten = new Karte[52];
 	static int aktiverSpieler = 0;
 	static int runde = 1;
 	static Karte[] kartenfeld = new Karte[4];
 	static Spieler[] spieler = new Spieler[4];
 	private Karte trumpfkarte;
-	private String[][] wb = new String [6][5];
+	private String[][] wb = new String[6][5];
+	int test;
 
-	public Wizard() {
+	public Wizzard() {
 		spielerErstellen();
 		wahrheitsblockErstellen();
 	}
@@ -34,6 +35,8 @@ public class Wizard {
 			spieler[i] = new Bot("Bot" + i);
 
 		}
+		System.out.println("zum Testen 1 eingeben und zum Spielen 0");
+		test = sc.nextInt();
 	}
 
 	public void start() {
@@ -60,7 +63,7 @@ public class Wizard {
 		int max = 0;
 		int index = 0;
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			if(spieler[i].getPunkte() > max) {
+			if (spieler[i].getPunkte() > max) {
 				max = spieler[i].getPunkte();
 				index = i;
 			}
@@ -82,21 +85,35 @@ public class Wizard {
 
 	private void kartenAusteilen() {
 		trumpfkarte = karten[(int) (Math.random() * 51)];
-		System.out.println("Trumpfkarte ist: "+ trumpfkarte);
+		System.out.println("Trumpfkarte ist: " + trumpfkarte);
 		System.out.println();
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			System.out.print(spieler[i].getName() + " hat die Karte: ");
+			if (test == 0) {// falls zum Spielen nur die Karten vom Spieler anzeigen
+				if (spieler[i].mensch == true) {
+					System.out.print(spieler[i].getName() + " hat die Karte: ");
+				}
+			} else {
+				System.out.print(spieler[i].getName() + " hat die Karte: ");
+			}
 			for (int j = 0; j < runde; j++) {
 				int zufall = (int) (Math.random() * 51);
 				if (karten[zufall] != null) {
 					spieler[i].getHandKarten()[j] = karten[zufall];
-					System.out.print(spieler[i].getHandKarten()[j] + "     ");
+					if (test == 0) {// falls zum Spielen nur die Karten vom Spieler anzeigen
+						if (spieler[i].mensch == true) {
+							System.out.print(spieler[i].getHandKarten()[j] + "     ");
+						}
+					} else {
+						System.out.print(spieler[i].getHandKarten()[j] + "     ");
+					}
 					karten[zufall] = null;
 				} else {
 					j--;
 				}
 			}
-			System.out.println();
+			if (test != 0) {
+				System.out.println();
+			}
 		}
 		System.out.println();
 	}
@@ -105,13 +122,17 @@ public class Wizard {
 		int tempaktiv = aktiverSpieler;
 		int sum = 0;
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			if (i == Spieler.getAnzahl() - 1) {
+			if (i == Spieler.getAnzahl() - 1) {// falls die Summe der Vorhersagen= Runde nochmal vorhersagen
 				spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
 				while (spieler[tempaktiv].getVorhersage() + sum == runde) {
 					spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
 				}
+				System.out.println(
+						spieler[tempaktiv].getName() + " hat die Vorhersage: " + spieler[tempaktiv].getVorhersage());
 			} else {
 				spieler[tempaktiv].setVorhersage(spieler[tempaktiv].vorhersagen());
+				System.out.println(
+						spieler[tempaktiv].getName() + " hat die Vorhersage: " + spieler[tempaktiv].getVorhersage());
 				sum += spieler[tempaktiv].getVorhersage();
 			}
 			if (tempaktiv < Spieler.getAnzahl() - 1)
@@ -131,7 +152,6 @@ public class Wizard {
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
 				kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen();
 
-
 				if (tempaktiv < Spieler.getAnzahl() - 1) {
 					tempaktiv++;
 				} else {
@@ -141,7 +161,7 @@ public class Wizard {
 			}
 			System.out.print("Kartenfeld: ");
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
-				System.out.print(  kartenfeld[i] + "\t");
+				System.out.print(kartenfeld[i] + "\t");
 			}
 			System.out.println();
 			stechen();
@@ -153,33 +173,38 @@ public class Wizard {
 
 	private void berechnen() {
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			if (spieler[i].getStich() == spieler[i].getVorhersage()) { //wenn die Vorhersage gleich Stiche ist, bekommt man 20 bonus
+			if (spieler[i].getStich() == spieler[i].getVorhersage()) { // wenn die Vorhersage gleich Stiche ist, bekommt
+																		// man 20 P. bonus + 10 P. für jeden Stich
 				spieler[i].setPunkte(spieler[i].getPunkte() + 20 + (spieler[i].getStich() * 10));
-			} else {
+			} else {// Vorhersage ungleich Stiche, verliert man (10 mal die Differenz zwischen
+					// seiner Vorhersage und Stiche)P.
 				spieler[i].setPunkte(
-						spieler[i].getPunkte()+Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
+						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
-			wb[runde][i+1] =  "\t" + spieler[i].getPunkte() + "|" + spieler[i].getStich(); //die Punkte an den wb eingeben
+			wb[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den wb
+																							// eingeben
 		}
 	}
+
 	public void wahrheitsblockZeigen() {
-		for (String i[] : wb ) {
+		for (String i[] : wb) {
 			for (String j : i) {
 				System.out.printf(j + "\t");
 			}
 			System.out.println();
 		}
 	}
+
 	private void wahrheitsblockErstellen() {
-		for(int i = 0; i < wb.length; i++) {
-			for ( int j = 0; j < 5; j ++) { 
+		for (int i = 0; i < wb.length; i++) {
+			for (int j = 0; j < 5; j++) {
 				wb[i][j] = "\t";
 			}
 		}
-		for ( int i = 1; i <= Spieler.getAnzahl(); i++) { //Spieler an den wb eingeben
-			wb[0][i] = spieler [i-1].getName() + "\t";
+		for (int i = 1; i <= Spieler.getAnzahl(); i++) { // Spieler an den wb eingeben
+			wb[0][i] = spieler[i - 1].getName() + "\t";
 		}
-		for(int i = 1; i <= 5; i++) { //die Runden von 1 bis 5 eingeben
+		for (int i = 1; i <= 5; i++) { // die Runden von 1 bis 5 eingeben
 			wb[i][0] = i + ". Runde";
 		}
 	}
@@ -193,7 +218,8 @@ public class Wizard {
 	private void stechen() {
 		int index = 0;
 		int max = 0;
-		boolean b = false; //die Karte, die die gleiche Farbe wie die Trumpfkarte hat, wird auf true gesetzt
+		boolean b = false; // die Karte, die die gleiche Farbe wie die Trumpfkarte hat, wird auf true
+							// gesetzt
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
 			if (kartenfeld[i].getFarbe() == trumpfkarte.getFarbe()) {
 				if (kartenfeld[i].getZahl() > max) {
@@ -214,7 +240,8 @@ public class Wizard {
 
 			}
 		}
-		spieler[index].setStich(spieler[index].getStich() + 1); //der Spieler bekommt ein Stich wenn er die Runde gewinnt
+		spieler[index].setStich(spieler[index].getStich() + 1); // der Spieler bekommt ein Stich wenn er die Runde
+																// gewinnt
 		System.out.println("----------------------------");
 		System.out.println(spieler[index].getName() + " hat gestochen!");
 		System.out.println("----------------------------");
@@ -227,7 +254,7 @@ public class Wizard {
 	}
 
 	public static void main(String[] args) {
-		Wizard w = new Wizard();
+		Wizzard w = new Wizzard();
 		w.start();
 	}
 }
