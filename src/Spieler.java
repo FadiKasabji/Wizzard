@@ -2,9 +2,11 @@
 public class Spieler {
 	private String name;
 	private static int anzahl = 0;
-	private int punkte=0;
-	private int vorhersage=0;
-	private int stich=0;
+	private int punkte = 0;
+	private int vorhersage = 0;
+	private int stich = 0;
+	private Karte[] handKarten = new Karte[5];
+	
 	public int getVorhersage() {
 		return vorhersage;
 	}
@@ -12,8 +14,6 @@ public class Spieler {
 	public void setVorhersage(int vorhersage) {
 		this.vorhersage = vorhersage;
 	}
-
-	Karte handKarten []= new Karte[5];
 
 	public Spieler(String name) {
 		setName(name);
@@ -62,5 +62,13 @@ public class Spieler {
 
 	public void setStich(int stich) {
 		this.stich = stich;
+	}
+
+	public Karte[] getHandKarten() {
+		return handKarten;
+	}
+
+	public void setHandKarten(Karte handKarten[]) {
+		this.handKarten = handKarten;
 	}
 }

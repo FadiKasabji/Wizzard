@@ -1,19 +1,19 @@
 import java.util.Scanner;
-//hiahaihaiha
+
 public class Wizzard {
-	public static Karte[] karten = new Karte[52];
+	static Karte[] karten = new Karte[52];
+	static int aktiverSpieler = 0;
+	static int runde = 1;
 	static Karte[] kartenfeld = new Karte[4];
 	static Spieler[] spieler = new Spieler[4];
-	Karte trumpfkarte;
-	String[][] wb = new String [6][5];
-	static int aktiverSpieler = 0;
-	public static int runde = 1;
+	private Karte trumpfkarte;
+	private String[][] wb = new String [6][5];
 
 	public Wizzard() {
 		spielerErstellen();
 		wahrheitsblockErstellen();
 	}
-	
+
 	public void spielerErstellen() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Spielername eingeben");
@@ -35,9 +35,10 @@ public class Wizzard {
 
 		}
 	}
+
 	public void start() {
 		while (runde < 6) {
-			System.out.println("*-----------------"+ runde+". Runde -----------------*");
+			System.out.println("*-----------------" + runde + ". Runde -----------------*");
 			deckAusfuellen();
 			kartenAusteilen();
 			alleVorhersagen();
@@ -54,20 +55,20 @@ public class Wizzard {
 		}
 		gewinner();
 	}
-	
+
 	private void gewinner() {
-		int max=0;
-		int index=0;
-		for(int i=0; i<Spieler.getAnzahl();i++) {
-			if(spieler[i].getPunkte()>max) {
-				max=spieler[i].getPunkte();
-				index=i;
+		int max = 0;
+		int index = 0;
+		for (int i = 0; i < Spieler.getAnzahl(); i++) {
+			if(spieler[i].getPunkte() > max) {
+				max = spieler[i].getPunkte();
+				index = i;
 			}
 		}
-		System.out.println(spieler[index].getName()+" hat gewonnen");
+		System.out.println(spieler[index].getName() + " hat gewonnen");
 	}
 
-	public void deckAusfuellen() {
+	private void deckAusfuellen() {
 		int x = 0;
 		while (x < 52) {
 			for (int i = 0; i < 4; i++) {
@@ -78,8 +79,8 @@ public class Wizzard {
 			}
 		}
 	}
-	
-	public void kartenAusteilen() {
+
+	private void kartenAusteilen() {
 		trumpfkarte = karten[(int) (Math.random() * 51)];
 		System.out.println("Trumpfkarte ist: "+ trumpfkarte);
 		System.out.println();
@@ -88,8 +89,8 @@ public class Wizzard {
 			for (int j = 0; j < runde; j++) {
 				int zufall = (int) (Math.random() * 51);
 				if (karten[zufall] != null) {
-					spieler[i].handKarten[j] = karten[zufall];
-					System.out.print(spieler[i].handKarten[j]+ "     ");
+					spieler[i].getHandKarten()[j] = karten[zufall];
+					System.out.print(spieler[i].getHandKarten()[j] + "     ");
 					karten[zufall] = null;
 				} else {
 					j--;
@@ -99,7 +100,7 @@ public class Wizzard {
 		}
 		System.out.println();
 	}
-	
+
 	private void alleVorhersagen() {
 		int tempaktiv = aktiverSpieler;
 		int sum = 0;
@@ -152,14 +153,13 @@ public class Wizzard {
 
 	private void berechnen() {
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			if (spieler[i].getStich() == spieler[i].getVorhersage()) {
+			if (spieler[i].getStich() == spieler[i].getVorhersage()) { //wenn die Vorhersage gleich Stiche ist, bekommt man 20 bonus
 				spieler[i].setPunkte(spieler[i].getPunkte() + 20 + (spieler[i].getStich() * 10));
 			} else {
 				spieler[i].setPunkte(
 						spieler[i].getPunkte()+Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
-			wb[runde][i+1] =  "\t" + spieler[i].getPunkte() + "|" + spieler[i].getStich();
-
+			wb[runde][i+1] =  "\t" + spieler[i].getPunkte() + "|" + spieler[i].getStich(); //die Punkte an den wb eingeben
 		}
 	}
 	public void wahrheitsblockZeigen() {
@@ -170,16 +170,16 @@ public class Wizzard {
 			System.out.println();
 		}
 	}
-	public void wahrheitsblockErstellen	() {
-		for(int i = 0 ; i< 6; i++) {
-			for ( int j = 0; j < 5; j ++) {
+	private void wahrheitsblockErstellen() {
+		for(int i = 0; i < wb.length; i++) {
+			for ( int j = 0; j < 5; j ++) { 
 				wb[i][j] = "\t";
 			}
 		}
-		for ( int i = 1; i <= Spieler.getAnzahl() ; i++) {
+		for ( int i = 1; i <= Spieler.getAnzahl(); i++) { //Spieler an den wb eingeben
 			wb[0][i] = spieler [i-1].getName() + "\t";
 		}
-		for(int i = 1 ; i <=5 ; i++) {
+		for(int i = 1; i <= 5; i++) { //die Runden von 1 bis 5 eingeben
 			wb[i][0] = i + ". Runde";
 		}
 	}
@@ -188,13 +188,12 @@ public class Wizzard {
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
 			spieler[i].setStich(0);
 		}
-
 	}
 
 	private void stechen() {
 		int index = 0;
 		int max = 0;
-		boolean b = false;
+		boolean b = false; //die Karte, die die gleiche Farbe wie die Trumpfkarte hat, wird auf true gesetzt
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
 			if (kartenfeld[i].getFarbe() == trumpfkarte.getFarbe()) {
 				if (kartenfeld[i].getZahl() > max) {
@@ -215,9 +214,8 @@ public class Wizzard {
 
 			}
 		}
-		spieler[index].setStich(spieler[index].getStich() + 1);
+		spieler[index].setStich(spieler[index].getStich() + 1); //der Spieler bekommt ein Stich wenn er die Runde gewinnt
 		System.out.println(spieler[index].getName() + " hat gestochen!");
-
 	}
 
 	private void feldAufraeumen() {
