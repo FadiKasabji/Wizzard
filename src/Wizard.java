@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Wizzard {
+public class Wizard {
 	static Karte[] karten = new Karte[52];
 	static int aktiverSpieler = 0;
 	static int runde = 1;
@@ -9,7 +9,7 @@ public class Wizzard {
 	private Karte trumpfkarte;
 	private String[][] wb = new String [6][5];
 
-	public Wizzard() {
+	public Wizard() {
 		spielerErstellen();
 		wahrheitsblockErstellen();
 	}
@@ -215,7 +215,9 @@ public class Wizzard {
 			}
 		}
 		spieler[index].setStich(spieler[index].getStich() + 1); //der Spieler bekommt ein Stich wenn er die Runde gewinnt
+		System.out.println("----------------------------");
 		System.out.println(spieler[index].getName() + " hat gestochen!");
+		System.out.println("----------------------------");
 	}
 
 	private void feldAufraeumen() {
@@ -225,7 +227,7 @@ public class Wizzard {
 	}
 
 	public static void main(String[] args) {
-		Wizzard w = new Wizzard();
+		Wizard w = new Wizard();
 		w.start();
 	}
 }
