@@ -26,11 +26,17 @@ public class Wizzard {
 		Mensch m = new Mensch(name);
 		spieler[0] = m;
 		System.out.println("Gegneranzahl eingeben");
+
+		while (!sc.hasNextInt()) { //wenn der Benutzer keine Zahl eingibt
+			System.out.println("Bitte gueltige Gegneranzahl eingeben");
+			sc.nextLine();
+		}
 		int an = sc.nextInt();
-		while (an > 3 || an < 1) {
+		while ((an > 3 || an < 1)) {
 			System.out.println("Bitte gueltige Gegneranzahl eingeben");
 			an = sc.nextInt();
 		}
+
 		for (int i = 1; i <= an; i++) {
 			spieler[i] = new Bot("Bot" + i);
 
@@ -44,6 +50,7 @@ public class Wizzard {
 			System.out.println("*-----------------" + runde + ". Runde -----------------*");
 			deckAusfuellen();
 			kartenAusteilen();
+			kartenZeigen();
 			alleVorhersagen();
 			alleKartenlegen();
 			berechnen();
@@ -88,36 +95,31 @@ public class Wizzard {
 		System.out.println("Trumpfkarte ist: " + trumpfkarte);
 		System.out.println();
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
-			if (test == 0) {// falls zum Spielen nur die Karten vom Spieler anzeigen
-				if (spieler[i].mensch == true) {
-					System.out.print(spieler[i].getName() + " hat die Karte: ");
-				}
-			} else {
-				System.out.print(spieler[i].getName() + " hat die Karte: ");
-			}
 			for (int j = 0; j < runde; j++) {
 				int zufall = (int) (Math.random() * 51);
 				if (karten[zufall] != null) {
 					spieler[i].getHandKarten()[j] = karten[zufall];
-					if (test == 0) {// falls zum Spielen nur die Karten vom Spieler anzeigen
-						if (spieler[i].mensch == true) {
-							System.out.print(spieler[i].getHandKarten()[j] + "     ");
-						}
-					} else {
-						System.out.print(spieler[i].getHandKarten()[j] + "     ");
-					}
 					karten[zufall] = null;
 				} else {
 					j--;
 				}
-			}
-			if (test != 0) {
+			}	
+		}
+	}
+
+	private void kartenZeigen() {
+		if (test == 0) {// falls zum Spielen nur die Karten vom Spieler anzeigen
+			System.out.print(spieler[0].getName() + " hat die Karte: ");
+		} else {
+			for (int i = 0; i < Spieler.getAnzahl(); i++) {
+				for (int j = 0; j < runde; j++) {
+					System.out.print(spieler[i].getName() + " hat die Karte: " + spieler[i].getHandKarten()[j]);
+				}
 				System.out.println();
 			}
 		}
 		System.out.println();
 	}
-
 	private void alleVorhersagen() {
 		int tempaktiv = aktiverSpieler;
 		int sum = 0;
@@ -174,15 +176,15 @@ public class Wizzard {
 	private void berechnen() {
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
 			if (spieler[i].getStich() == spieler[i].getVorhersage()) { // wenn die Vorhersage gleich Stiche ist, bekommt
-																		// man 20 P. bonus + 10 P. für jeden Stich
+				// man 20 P. bonus + 10 P. fï¿½r jeden Stich
 				spieler[i].setPunkte(spieler[i].getPunkte() + 20 + (spieler[i].getStich() * 10));
 			} else {// Vorhersage ungleich Stiche, verliert man (10 mal die Differenz zwischen
-					// seiner Vorhersage und Stiche)P.
+				// seiner Vorhersage und Stiche)P.
 				spieler[i].setPunkte(
 						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
 			wb[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den wb
-																							// eingeben
+			// eingeben
 		}
 	}
 
@@ -219,7 +221,7 @@ public class Wizzard {
 		int index = 0;
 		int max = 0;
 		boolean b = false; // die Karte, die die gleiche Farbe wie die Trumpfkarte hat, wird auf true
-							// gesetzt
+		// gesetzt
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
 			if (kartenfeld[i].getFarbe() == trumpfkarte.getFarbe()) {
 				if (kartenfeld[i].getZahl() > max) {
@@ -241,7 +243,7 @@ public class Wizzard {
 			}
 		}
 		spieler[index].setStich(spieler[index].getStich() + 1); // der Spieler bekommt ein Stich wenn er die Runde
-																// gewinnt
+		// gewinnt
 		System.out.println("----------------------------");
 		System.out.println(spieler[index].getName() + " hat gestochen!");
 		System.out.println("----------------------------");
