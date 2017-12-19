@@ -112,14 +112,16 @@ public class Wizzard {
 			System.out.print(spieler[0].getName() + " hat die Karte: ");
 		} else {
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
+				System.out.print(spieler[i].getName() + " hat die Karte: ");
 				for (int j = 0; j < runde; j++) {
-					System.out.print(spieler[i].getName() + " hat die Karte: " + spieler[i].getHandKarten()[j]);
+					System.out.print("   " + spieler[i].getHandKarten()[j]);
 				}
 				System.out.println();
 			}
 		}
 		System.out.println();
 	}
+	
 	private void alleVorhersagen() {
 		int tempaktiv = aktiverSpieler;
 		int sum = 0;
