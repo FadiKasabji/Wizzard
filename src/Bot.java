@@ -14,9 +14,9 @@ public class Bot extends Spieler {
 	}
 
 	@Override
-	public Karte karteLegen() {
+	public Karte karteLegen(Wizzard spiel) {
 		Karte tempKarte = null;
-		if (this == Wizzard.spieler[Wizzard.aktiverSpieler]) { //wenn Bot vor den anderen Spielern eine Karte legt
+		if (this == spiel.getSpieler()[Wizzard.aktiverSpieler]) { //wenn Bot vor den anderen Spielern eine Karte legt
 			for (int i = 0; i < Wizzard.runde; i++) {
 				if (getHandKarten()[i] != null) {
 					tempKarte = getHandKarten()[i];
@@ -28,7 +28,7 @@ public class Bot extends Spieler {
 		} else {
 			for (int i = 0; i < Wizzard.runde; i++) { //der Bot muss wenn moeglich eine Karte mit der gleichen Farbe wie die erstgelegte Karte legen
 				if (getHandKarten()[i] != null) {
-					if (getHandKarten()[i].getFarbe() == Wizzard.kartenfeld[Wizzard.aktiverSpieler].getFarbe()) {
+					if (getHandKarten()[i].getFarbe() == spiel.getKartenfeld()[Wizzard.aktiverSpieler].getFarbe()) {
 						tempKarte = getHandKarten()[i];
 						getHandKarten()[i] = null;
 						System.out.println(this.getName() + " legt " + tempKarte);

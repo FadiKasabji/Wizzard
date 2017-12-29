@@ -1,11 +1,12 @@
 import java.util.Scanner;
 
-public class Wizzard {
+public class Wizzard implements iBediener{
 	static Karte[] karten = new Karte[52];
 	static int aktiverSpieler = 0;
 	static int runde = 1;
-	static Karte[] kartenfeld = new Karte[4];
-	static Spieler[] spieler = new Spieler[4];
+	private Karte[] kartenfeld = new Karte[4];
+	private Spieler[] spieler = new Spieler[4];
+	
 	private Karte trumpfkarte;
 	private String[][] wb = new String[6][5];
 	int test;
@@ -63,10 +64,10 @@ public class Wizzard {
 				aktiverSpieler = 0;
 			}
 		}
-		System.out.println(gewinner());
+		gewinner();
 	}
 
-	private String gewinner() {
+	public boolean gewinner() {
 		int max = 0;
 		int index = 0;
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
@@ -75,7 +76,8 @@ public class Wizzard {
 				index = i;
 			}
 		}
-		return spieler[index].getName() + " hat gewonnen";
+		System.out.println(spieler[index].getName() + " hat gewonnen");
+		return true;
 	}
 
 	private void deckAusfuellen() {
@@ -110,6 +112,9 @@ public class Wizzard {
 	private void kartenZeigen() {
 		if (test == 0) {// falls zum Spielen nur die Karten vom Spieler anzeigen
 			System.out.print(spieler[0].getName() + " hat die Karte: ");
+			for (int j = 0; j < runde; j++) {
+				System.out.print("   " + spieler[0].getHandKarten()[j]);
+			}
 		} else {
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
 				System.out.print(spieler[i].getName() + " hat die Karte: ");
@@ -154,7 +159,7 @@ public class Wizzard {
 			// karten legen
 			tempaktiv = aktiverSpieler;
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
-				kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen();
+				kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen(this);
 
 				if (tempaktiv < Spieler.getAnzahl() - 1) {
 					tempaktiv++;
@@ -185,8 +190,7 @@ public class Wizzard {
 				spieler[i].setPunkte(
 						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
-			wb[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den wb
-			// eingeben
+			wb[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den wb eingeben
 		}
 	}
 
@@ -255,6 +259,13 @@ public class Wizzard {
 		for (int j = 0; j < kartenfeld.length; j++) {
 			kartenfeld[j] = null;
 		}
+	}
+	
+	public Karte[] getKartenfeld() {
+		return kartenfeld;
+	}
+	public Spieler[] getSpieler() {
+		return spieler;
 	}
 
 	public static void main(String[] args) {

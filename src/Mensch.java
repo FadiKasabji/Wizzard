@@ -20,7 +20,7 @@ public class Mensch extends Spieler {
 	}
 
 	@Override
-	public Karte karteLegen() {// Karte legen
+	public Karte karteLegen(Wizzard spiel) {// Karte legen
 		System.out.println("Bitte legen Sie eine Karte");
 		while (!sc.hasNextInt()) {
 			System.out.println("Bitte gueltige Karte legen 0");

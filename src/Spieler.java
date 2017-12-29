@@ -40,7 +40,7 @@ public abstract class Spieler {
 		return 0;
 	}
 
-	public Karte karteLegen() {
+	public Karte karteLegen(Wizzard spiel) {
 		return null;
 	}
 
