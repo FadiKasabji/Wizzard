@@ -53,7 +53,7 @@ public class Wizzard {
 			kartenAusteilen();
 			kartenZeigen();
 			alleVorhersagen();
-			alleKartenlegen();
+			alleKartenlegen(); //includes stechen() und aufraemen()
 			berechnen();
 			wb.wahrheitsblockZeigen();
 			resetStiche();
@@ -110,7 +110,13 @@ public class Wizzard {
 
 	private void kartenZeigen() {
 		if (test == 0) {// falls zum Spielen nur die Karten vom Spieler anzeigen
-			System.out.print(spieler[0].getName() + " hat die Karte: ");
+			String kartenAnzeige = "";
+			kartenAnzeige += spieler[0].getName() + " hat die Karte: ";
+			for (int j = 0; j < runde; j++) {
+				kartenAnzeige += spieler[0].getHandKarten()[j] + " ";
+			}
+			System.out.println(kartenAnzeige);
+			
 		} else {
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
 				System.out.print(spieler[i].getName() + " hat die Karte: ");
