@@ -6,13 +6,14 @@ public class Wizzard {
 	static int runde = 1;
 	static Karte[] kartenfeld = new Karte[4];
 	static Spieler[] spieler = new Spieler[4];
+	private Wahrheitsblock wb = new Wahrheitsblock();
 	private Karte trumpfkarte;
-	private String[][] wb = new String[6][5];
+	
 	int test;
 
 	public Wizzard() {
 		spielerErstellen();
-		wahrheitsblockErstellen();
+		wb.wahrheitsblockErstellen(spieler);
 	}
 
 	public void spielerErstellen() {
@@ -54,7 +55,7 @@ public class Wizzard {
 			alleVorhersagen();
 			alleKartenlegen();
 			berechnen();
-			wahrheitsblockZeigen();
+			wb.wahrheitsblockZeigen();
 			resetStiche();
 			runde++;
 			if (aktiverSpieler < Spieler.getAnzahl() - 1) {
@@ -185,33 +186,11 @@ public class Wizzard {
 				spieler[i].setPunkte(
 						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
-			wb[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den wb
+			wb.getWb()[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den wb
 			// eingeben
 		}
 	}
 
-	public void wahrheitsblockZeigen() {
-		for (String i[] : wb) {
-			for (String j : i) {
-				System.out.printf(j + "\t");
-			}
-			System.out.println();
-		}
-	}
-
-	private void wahrheitsblockErstellen() {
-		for (int i = 0; i < wb.length; i++) {
-			for (int j = 0; j < 5; j++) {
-				wb[i][j] = "\t";
-			}
-		}
-		for (int i = 1; i <= Spieler.getAnzahl(); i++) { // Spieler an den wb eingeben
-			wb[0][i] = spieler[i - 1].getName() + "\t";
-		}
-		for (int i = 1; i <= 5; i++) { // die Runden von 1 bis 5 eingeben
-			wb[i][0] = i + ". Runde";
-		}
-	}
 
 	private void resetStiche() {
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
