@@ -10,36 +10,65 @@ public class Mensch extends Spieler {
 	@Override
 	public int vorhersagen() {
 		System.out.println(this.getName() + " bitte vorhersagen");
-		while (!sc.hasNextInt()) {
-			System.out.println("Bitte eine Zahl eingeben!");
-			sc.nextLine();
+		boolean b = false;
+		int vorhersage = 0;
+		while (b == false) {
+			while (!sc.hasNextInt()) {
+				System.out.println("Bitte eine Zahl eingeben!");
+				sc.nextLine();
+			}
+			vorhersage = sc.nextInt();
+			if (vorhersage > -1) {
+				b = true;
+			} else {
+				System.out.println("Bitte eine gueltige Zahl eingeben!");
+			}
 		}
-		int vorhersage = sc.nextInt();
 		return vorhersage;
 	}
 
 	@Override
 	public Karte karteLegen() {// Karte legen
 		System.out.println("Bitte legen Sie eine Karte");
-		while (!sc.hasNextInt()) {
-			System.out.println("Bitte gueltige Karte legen 0");
-			sc.nextLine();
-		}
-		int kartenNr = sc.nextInt();
-		
 		boolean b = false;
+		int kartenNr = 0;
 		while (b != true) {
-			while (kartenNr > 4 || kartenNr < 0) { // wenn die ausgewaehlte KartenNr >5 oder <0, noch mal waehlen
-				System.out.println("Bitte gueltige Karte legen 1");
-				kartenNr = sc.nextInt();
+			while (!sc.hasNextInt()) {
+				System.out.println("Bitte gueltige Karte legen ");
+				sc.nextLine();
 			}
-			if (getHandKarten()[kartenNr] == null) { // wenn es keine Karte mit der ausgewaehlten KartenNr gibt, nochmal waehlen
-				System.out.println("Bitte gueltige Karte legen 2");
-				kartenNr = sc.nextInt();
+			kartenNr = sc.nextInt();
+			if (kartenNr > 4 || kartenNr < 0) { // wenn die ausgewaehlte KartenNr >5 oder <0, noch mal waehlen
+				System.out.println("Bitte gueltige Karte legen ");
+			} else if (getHandKarten()[kartenNr] == null) { // wenn es keine Karte mit der ausgewaehlten KartenNr gibt,
+															// nochmal waehlen
+				System.out.println("Bitte gueltige Karte legen ");
 			} else {
-				b = true;
+				if (Wizzard.aktiverSpieler != 0) {
+					boolean bo = false;
+					for (int i = 0; i < Wizzard.runde; i++) { // der Spieler muss eine Karte mit der gleichen Farbe wie
+																// die
+																// erstgelegte Karte legen, falls er Solche besitzt
+						if (getHandKarten()[i] != null) {
+							if (getHandKarten()[i].getFarbe() == Wizzard.kartenfeld[Wizzard.aktiverSpieler]
+									.getFarbe()) {
+								bo = true;
+								if (kartenNr == i) {
+									b = true;
+								} else {
+									System.out.println(
+											"Sie haben schon eine Karte, deren Farbe gleich die erstgelegte Karte ist");
+								}
+							}
+						}
+					}
+					if (bo == false) {
+						b = true;
+					}
+				} else {
+					b = true;
+				}
 			}
-
 		}
 		Karte tempKarte = getHandKarten()[kartenNr];
 		getHandKarten()[kartenNr] = null; // die gespielte Karte nicht mehr in der Hand

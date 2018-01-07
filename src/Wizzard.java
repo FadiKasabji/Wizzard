@@ -8,7 +8,7 @@ public class Wizzard {
 	static Spieler[] spieler = new Spieler[4];
 	private Wahrheitsblock wb = new Wahrheitsblock();
 	private Karte trumpfkarte;
-	
+
 	int test;
 
 	public Wizzard() {
@@ -27,22 +27,28 @@ public class Wizzard {
 		Mensch m = new Mensch(name);
 		spieler[0] = m;
 		System.out.println("Gegneranzahl eingeben");
-
-		while (!sc.hasNextInt()) { //wenn der Benutzer keine Zahl eingibt
+		int an = 0;
+		boolean b = false;
+		while (b == false) {
+			while (!sc.hasNextInt()) { // wenn der Benutzer keine Zahl eingibt
+				System.out.println("Bitte gueltige Gegneranzahl eingeben");
+				sc.nextLine();
+			}
+			an = sc.nextInt();
+			if ((an >3 || an < 1)) {
+				System.out.println("Bitte gueltige Gegneranzahl eingeben");
+			} else {
+				b = true;
+			}
+		}
+		for (int i = 1; i <= an; i++) {
+			spieler[i] = new Bot("Bot" + i);
+		}
+		System.out.println("zum Spielen 0 eingeben und zum Testen eine andere beliebige Zahl");
+		while (!sc.hasNextInt()) { // wenn der Benutzer keine Zahl eingibt
 			System.out.println("Bitte gueltige Gegneranzahl eingeben");
 			sc.nextLine();
 		}
-		int an = sc.nextInt();
-		while ((an > 3 || an < 1)) {
-			System.out.println("Bitte gueltige Gegneranzahl eingeben");
-			an = sc.nextInt();
-		}
-
-		for (int i = 1; i <= an; i++) {
-			spieler[i] = new Bot("Bot" + i);
-
-		}
-		System.out.println("zum Testen 1 eingeben und zum Spielen 0");
 		test = sc.nextInt();
 	}
 
@@ -53,7 +59,7 @@ public class Wizzard {
 			kartenAusteilen();
 			kartenZeigen();
 			alleVorhersagen();
-			alleKartenlegen(); //includes stechen() und aufraemen()
+			alleKartenlegen(); // includes stechen() und aufraemen()
 			berechnen();
 			wb.wahrheitsblockZeigen();
 			resetStiche();
@@ -104,7 +110,7 @@ public class Wizzard {
 				} else {
 					j--;
 				}
-			}	
+			}
 		}
 	}
 
@@ -116,7 +122,7 @@ public class Wizzard {
 				kartenAnzeige += spieler[0].getHandKarten()[j] + " ";
 			}
 			System.out.println(kartenAnzeige);
-			
+
 		} else {
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
 				System.out.print(spieler[i].getName() + " hat die Karte: ");
@@ -128,7 +134,7 @@ public class Wizzard {
 		}
 		System.out.println();
 	}
-	
+
 	private void alleVorhersagen() {
 		int tempaktiv = aktiverSpieler;
 		int sum = 0;
@@ -162,7 +168,7 @@ public class Wizzard {
 			tempaktiv = aktiverSpieler;
 			for (int i = 0; i < Spieler.getAnzahl(); i++) {
 				kartenfeld[tempaktiv] = spieler[tempaktiv].karteLegen();
-
+				
 				if (tempaktiv < Spieler.getAnzahl() - 1) {
 					tempaktiv++;
 				} else {
@@ -192,11 +198,11 @@ public class Wizzard {
 				spieler[i].setPunkte(
 						spieler[i].getPunkte() + Math.abs(spieler[i].getStich() - spieler[i].getVorhersage()) * -10);
 			}
-			wb.getWb()[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den wb
+			wb.getWb()[runde][i + 1] = spieler[i].getPunkte() + "|" + spieler[i].getStich() + "\t"; // die Punkte an den
+																									// wb
 			// eingeben
 		}
 	}
-
 
 	private void resetStiche() {
 		for (int i = 0; i < Spieler.getAnzahl(); i++) {
