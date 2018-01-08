@@ -6,7 +6,7 @@ public class Bot extends Spieler {
 	}
 
 	@Override
-	public int vorhersagen() {
+	public int vorhersagen() {// Zufall <= Handkarten ansonsten ist es unlogisch
 		int zuf = (int) (Math.round(Math.random() * Wizzard.runde));
 		int vorhersage = zuf;
 		return vorhersage;

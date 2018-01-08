@@ -6,6 +6,16 @@ public abstract class Spieler {
 	private int vorhersage = 0;
 	private int stich = 0;
 	private Karte[] handKarten = new Karte[5];
+	
+
+	public abstract int vorhersagen();
+
+	public abstract Karte karteLegen() ;
+	
+	
+	
+	
+	
 	public int getVorhersage() {
 		return vorhersage;
 	}
@@ -35,13 +45,6 @@ public abstract class Spieler {
 		this.name = name;
 	}
 
-	public int vorhersagen() {
-		return 0;
-	}
-
-	public Karte karteLegen() {
-		return null;
-	}
 
 	public String toString() {
 		return name;
